@@ -18,6 +18,7 @@ class CreateProjectsTable extends Migration
             $table->integer('institution_id');
             $table->integer('user_id');
             $table->string('name');
+            $table->string('nik')->nullable();
             $table->boolean('status')->default(1);
             $table->string('role')->nullable();
             $table->timestamps();

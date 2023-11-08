@@ -23,6 +23,7 @@ class CreateRecordsTable extends Migration
             $table->date('dob');
             $table->string('record_number')->nullable();
             $table->integer('category_id')->nullable();
+            $table->string('nik')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

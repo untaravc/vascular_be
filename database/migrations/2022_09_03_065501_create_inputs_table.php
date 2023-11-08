@@ -28,6 +28,8 @@ class CreateInputsTable extends Migration
             $table->string('dependency_value')->nullable();
             $table->boolean('is_currency')->default(0);
             $table->boolean('status')->default(1);
+            $table->boolean('blank_option')->default(0);
+            $table->text('note')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
