@@ -197,7 +197,10 @@ class RecordController extends Controller
     }
 
     public function list(Request $request){
+        $auth = $request->user();
+
         $data = Record::whereProjectId($request->project_id)
+            ->whereInstitutionId($auth['institution_id'])
             ->get();
 
         $this->response['result'] = $data;

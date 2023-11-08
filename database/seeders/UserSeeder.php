@@ -61,7 +61,9 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($data as $datum){
-            DB::table('users')->insert($datum);
+            try{
+                DB::table('users')->insert($datum);
+            }catch (\Exception $e){}
         }
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Input;
 use App\Models\InputDetail;
 use App\Models\ProjectInput;
 use App\Models\ProjectLog;
+use App\Models\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,6 +38,12 @@ class ProjectInputController extends Controller
         $project_input = ProjectInput::whereIn('input_id', $input->pluck('id'))
             ->whereRecordId($request->record_id)
             ->get();
+
+        $auth = $request->user();
+        $record = Record::find($request->record_id);
+        if($auth->institution_id != $record->institution_id){
+            return $this->response;
+        }
 
         foreach ($input as $item) {
             $value = $project_input->where('input_id', $item->id)->first();

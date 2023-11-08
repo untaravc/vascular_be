@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Input;
 use App\Models\InputDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class InputSeederController extends Controller
 {
@@ -1025,6 +1026,10 @@ class InputSeederController extends Controller
         } else {
             return [];
         }
+    }
+
+    public function password(){
+        return Hash::make('password');
     }
 }
 

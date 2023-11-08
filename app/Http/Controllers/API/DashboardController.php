@@ -4,17 +4,22 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Institution;
 use App\Models\Project;
+use App\Models\Record;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function stats()
+    public function stats(Request $request)
     {
+        $auth = $request->user();
         $projects = Project::whereStatus(1)
-            ->withCount('records')->get();
+            ->withCount('records')
+            ->get();
 
         $base_cat = Category::whereParentId(0)
             ->whereIn('project_id', $projects->pluck('id'))
@@ -34,7 +39,8 @@ class DashboardController extends Controller
         $auth = Auth::guard()->user();
         switch ($auth['role_id']) {
             case 1:
-                $users = User::with('role')->limit(10)
+                $users = User::with('role')
+                    ->limit(10)
                     ->get();
                 break;
             default:
@@ -44,8 +50,34 @@ class DashboardController extends Controller
                     ->get();
         }
 
-        $this->response['result'] = $users;
+        $institutions = Institution::get();
+        $categories = Category::whereParentId(0)->get();
+
+        foreach ($institutions as $institution){
+            $records = Record::select('category_id', DB::raw('count(*) as total'))
+                ->groupBy('category_id')
+                ->whereInstitutionId($institution->id)
+                ->get();
+            $institution->setAttribute('records', $this->category_map($categories, $records));
+        }
+
+        $this->response['result'] = [
+            'institutions' => $institutions,
+        ];
         return $this->response;
+    }
+
+    function category_map($categories, $records){
+        $data = [];
+        foreach ($categories as $category){
+            $object = $records->where('category_id', $category->id)->first();
+            $data[] = [
+                'category_name' => $category->name,
+                'record_count' => $object ? $object['total'] : 0,
+            ];
+        }
+
+        return $data;
     }
 
     public function profile(Request $request)

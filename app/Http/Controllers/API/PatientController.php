@@ -76,6 +76,8 @@ class PatientController extends Controller
             ]);
         }
 
+        $auth = $request->user();
+
         $record = Record::wherePatientId($patient->id)
             ->whereProjectId($project->id)
             ->first();
@@ -87,7 +89,7 @@ class PatientController extends Controller
                 "name"           => $patient->name,
                 "dob"            => $patient->dob,
                 "project_id"     => $project->id,
-                "institution_id" => $project->institution_id,
+                "institution_id" => $auth->institution_id ?? $project->institution_id,
                 "category_id"    => $request->category_id,
 //                "record_number"  => null,
             ]);

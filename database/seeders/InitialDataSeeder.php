@@ -31,31 +31,41 @@ class InitialDataSeeder extends Seeder
         // menu
         $menus = $this->menu();
         foreach ($menus as $menu) {
-            Menu::create($menu);
+            try{
+                Menu::create($menu);
+            }catch (\Exception $e){}
         }
 
         // kategori
         $categories = $this->categories();
         foreach ($categories as $category) {
-            Category::create($category);
+            try{
+                Category::create($category);
+            }catch (\Exception $e){}
         }
 
         // role
         $roles = $this->role();
         foreach ($roles as $role) {
-            Role::create($role);
+            try{
+                Role::create($role);
+            }catch (\Exception $e){}
         }
 
         // role
         $menu_roles = $this->menu_role();
         foreach ($menu_roles as $menu_role) {
-            MenuRole::create($menu_role);
+            try{
+                MenuRole::create($menu_role);
+            }catch (\Exception $e){}
         }
 
         // project
         $projects = $this->projects();
         foreach ($projects as $project) {
-            Project::create($project);
+            try{
+                Project::create($project);
+            }catch (\Exception $e){}
         }
     }
 
