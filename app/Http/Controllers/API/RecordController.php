@@ -8,6 +8,7 @@ use App\Models\Input;
 use App\Models\ProjectInput;
 use App\Models\ProjectLog;
 use App\Models\Record;
+use App\Models\UserInstitution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -17,10 +18,26 @@ class RecordController extends Controller
     public function index(Request $request, $project_id)
     {
         $dataContent = Record::orderByDesc('created_at')
-            ->with('category')
+            ->with([
+                'category',
+                'institution'
+            ])
             ->whereProjectId($project_id);
         $dataContent = $this->withFilter($dataContent, $request);
         $dataContent = $dataContent->paginate(25);
+
+        $user = $request->user();
+
+        $user_institution = UserInstitution::whereUserId($user['id'])
+            ->pluck('institution_id');
+
+        foreach ($dataContent as $data){
+            $access = false;
+            if(in_array($data->institution_id, $user_institution->toArray())){
+                $access = true;
+            }
+            $data->setAttribute('access', $access);
+        }
 
         $result = collect($this->response);
         return $result->merge($dataContent);
@@ -197,10 +214,12 @@ class RecordController extends Controller
     }
 
     public function list(Request $request){
-        $auth = $request->user();
+        $user = $request->user();
+
+        $user_institutions = UserInstitution::whereUserId($user->id)->pluck('institution_id');
 
         $data = Record::whereProjectId($request->project_id)
-            ->whereInstitutionId($auth['institution_id'])
+            ->whereIn('institution_id', $user_institutions->toArray())
             ->get();
 
         $this->response['result'] = $data;

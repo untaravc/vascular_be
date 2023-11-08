@@ -84,6 +84,13 @@ class InputSeederController extends Controller
                 'parent_id'  => 1,
                 'name'       => 'TREATMENTS',
                 'label'      => 'treatments',
+                'children'   => [
+                    [
+                        'project_id' => 1,
+                        'name'       => 'Fribinolytic',
+                        'label'      => 'fibrinolytic',
+                    ],
+                ]
             ],
             [
                 'project_id' => 1,
@@ -341,8 +348,8 @@ class InputSeederController extends Controller
         $this->insert_input($identity, 'identity', $parent_id);
 
         $diagnose = [
-            ['name' => 'Diagnose', 'type' => 'textarea',],
-            ['name' => 'Rutherford', 'type' => 'text',],
+            ['name' => 'Symptoms onset ', 'type' => 'textarea', 'note' => "How many days the onset of symptoms?"],
+            ['name' => 'Rutherford', 'type' => 'checkbox', 'children' => $this->input_details('rutherford')],
         ];
 
         $this->insert_input($diagnose, 'diagnose', $parent_id);
@@ -353,7 +360,11 @@ class InputSeederController extends Controller
             ['name' => 'Infection', 'type' => 'radio', 'children' => $this->input_details('bool')],
             ['name' => 'Renal Failure', 'type' => 'radio', 'children' => $this->input_details('bool')],
             ['name' => 'CHF', 'type' => 'radio', 'children' => $this->input_details('bool')],
-            ['name' => 'AF', 'type' => 'radio', 'children' => $this->input_details('bool')],
+            ['name' => 'Stroke', 'type' => 'radio', 'children' => $this->input_details('bool')],
+            ['name' => 'CAD', 'type' => 'radio', 'children' => $this->input_details('bool')],
+            ['name' => 'CVD', 'type' => 'radio', 'children' => $this->input_details('bool')],
+            ['name' => 'Autoimmune', 'type' => 'radio', 'children' => $this->input_details('bool')],
+            ['name' => 'Autoimmune Description', 'type' => 'textarea', "note" => "type of disease"],
             ['name' => 'Other', 'type' => 'textarea'],
         ];
 
@@ -362,6 +373,7 @@ class InputSeederController extends Controller
         $physical_examination = [
             ['name' => 'Blood Pressure', 'type' => 'text'],
             ['name' => 'Necrosis/Gangrene', 'type' => 'radio', 'children' => $this->input_details('bool')],
+            ['name' => 'Sensory Loss ', 'type' => 'radio', 'children' => $this->input_details('sensory_loss')],
             ['name' => 'Saturation of Feet Finger (Right Digiti I)', 'type' => 'number', 'suffix' => '%'],
             ['name' => 'Saturation of Feet Finger (Right Digiti II)', 'type' => 'number', 'suffix' => '%'],
             ['name' => 'Saturation of Feet Finger (Right Digiti III)', 'type' => 'number', 'suffix' => '%'],
@@ -378,15 +390,14 @@ class InputSeederController extends Controller
         $risk_factors = [
             ['name' => 'Age', 'type' => 'number', 'suffix' => 'year'],
             ['name' => 'Weight', 'type' => 'number', 'suffix' => 'kg'],
-            ['name' => 'Height', 'type' => 'number', 'suffix' => 'kg'],
-            ['name' => 'Hypertension', 'type' => 'radio', 'children' => $this->input_details('bool')],
-            ['name' => 'Hypertension Description', 'type' => 'textarea'],
-            ['name' => 'DM', 'type' => 'radio', 'children' => $this->input_details('bool')],
-            ['name' => 'DM Description', 'type' => 'textarea'],
+            ['name' => 'Height', 'type' => 'number', 'suffix' => 'cm'],
             ['name' => 'Dyslipidemia', 'type' => 'radio', 'children' => $this->input_details('bool')],
-            ['name' => 'Dyslipidemia Description', 'type' => 'textarea'],
-            ['name' => 'Smoker Status', 'type' => 'select', 'children' => $this->input_details('smoker_status')],
-            ['name' => 'Medical History', 'type' => 'select', 'children' => $this->input_details('ali_medical_history')],
+            ['name' => 'AF', 'type' => 'radio', 'children' => $this->input_details('bool')],
+//            ['name' => 'Dyslipidemia Description', 'type' => 'textarea'],
+//            ['name' => 'Medical History', 'type' => 'select', 'children' => $this->input_details('ali_medical_history')],
+            ['name' => 'Hypertension', 'type' => 'radio', 'children' => $this->input_details('bool')],
+            ['name' => 'DM', 'type' => 'radio', 'children' => $this->input_details('bool')],
+            ['name' => 'Smoker', 'type' => 'select', 'children' => $this->input_details('smoker_status')],
         ];
         $this->insert_input($risk_factors, 'risk_factors', $parent_id);
 
@@ -415,36 +426,47 @@ class InputSeederController extends Controller
             ['name' => 'LAVI', 'type' => 'number', 'suffix' => 'ml/m^2'],
             ['name' => 'LVIdd', 'type' => 'number', 'suffix' => 'mm'],
             ['name' => 'EF', 'type' => 'number', 'suffix' => '%'],
-            ['name' => 'LA thrombus', 'type' => 'text'],
-            ['name' => 'LV thrombus', 'type' => 'text'],
-            ['name' => 'VHD', 'type' => 'text'],
+            ['name' => 'LA thrombus', 'type' => 'radio', 'children' => $this->input_details('bool')],
+            ['name' => 'LV thrombus', 'type' => 'radio', 'children' => $this->input_details('bool')],
+            ['name' => 'VHD', 'type' => 'radio', 'children' => $this->input_details('bool')],
         ];
 
         $this->insert_input($echocardiography, 'echocardiography', $parent_id);
 
         $diagnostic_studies = [
-            ['name' => 'Angiography', 'type' => 'checkbox', 'children' => $this->input_details('angiography')],
+            ['name' => 'Duplex Stenosis/Occlusion', 'type' => 'checkbox', 'children' => $this->input_details('angiography')],
+            ['name' => 'Angiography Stenosis/Occlusion', 'type' => 'checkbox', 'children' => $this->input_details('angiography')],
         ];
 
         $this->insert_input($diagnostic_studies, 'diagnostic_studies', $parent_id);
 
         $intervention = [
-            ['name' => 'Intervention', 'type' => 'select', 'children' => $this->input_details('intervention')],
-            ['name' => 'Bleeding Risk', 'type' => 'select', 'children' => $this->input_details('bleeding_risk')],
+            ['name' => 'Intervention', 'type' => 'checkbox', 'children' => $this->input_details('intervention')],
         ];
 
         $this->insert_input($intervention, 'intervention', $parent_id);
 
+        $fibrinolytic = [
+            ['name' => 'Type', 'type' => 'checkbox', 'children' => $this->input_details('ali_fibrinolytic')],
+            ['name' => 'Dose: Bolus', 'type' => 'number', 'suffix' => 'mg/IU'],
+            ['name' => 'Dose: Maintenance', 'type' => 'number', 'suffix' => 'mg/IU/hour'],
+        ];
+
+        $this->insert_input($fibrinolytic, 'fibrinolytic', $parent_id);
+
         $treatments = [
-            ['name' => 'Regularly Consumed Drugs', 'type' => 'textarea',],
-            ['name' => 'Inpatient Medication', 'type' => 'textarea'],
+//            ['name' => 'Regularly Consumed Drugs', 'type' => 'textarea',],
+//            ['name' => 'Inpatient Medication', 'type' => 'textarea'],
+            ['name' => 'Treatments', 'type' => 'checkbox', 'children' => $this->input_details('ali_treatments')],
         ];
 
         $this->insert_input($treatments, 'treatments', $parent_id);
         $outcome = [
             ['name' => 'Amputation', 'type' => 'radio', 'children' => $this->input_details('bool')],
-            ['name' => 'Time of Amputation after Admission', 'type' => 'number', 'suffix' => 'day'],
+            ['name' => 'Time of Amputation after First Admission', 'type' => 'number', 'suffix' => 'day'],
+            ['name' => 'Bleeding', 'type' => 'select', 'children' => $this->input_details('bleeding_risk')],
             ['name' => 'Mortality ', 'type' => 'radio', 'children' => $this->input_details('bool')],
+            ['name' => 'Time of Mortality after First Admission', 'type' => 'number', 'suffix' => 'day'],
             ['name' => 'Cause of Mortality', 'type' => 'textarea'],
             ['name' => 'Reperfusion Injury', 'type' => 'radio', 'children' => $this->input_details('bool')],
         ];
@@ -804,6 +826,8 @@ class InputSeederController extends Controller
         $cat_base = Category::whereParentId($parent_id)->get();
         $cat_cld = Category::whereIn('parent_id', $cat_base->pluck('id'))->get();
         $cats = $cat_base->merge($cat_cld);
+
+        $active_ids = [];
         foreach ($inputs as $input) {
             $cat = $cats->where('label', $cat_label)->first();
 
@@ -816,14 +840,17 @@ class InputSeederController extends Controller
             $cat_id = $cat['id'];
 
             $created = Input::whereName($input['name'])
-                ->whereCategoryId($cat_id)->first();
+                ->whereCategoryId($cat_id)
+                ->first();
 
             if ($created) {
                 $created->update([
-                    'type'        => $input['type'],
-                    'prefix'      => $input['prefix'] ?? null,
-                    'suffix'      => $input['suffix'] ?? null,
-                    'is_currency' => $input['is_currency'] ?? 0,
+                    'type'         => $input['type'],
+                    'note'         => isset($input['note']) ? $input['note'] : null,
+                    'prefix'       => isset($input['prefix']) ? $input['prefix'] : null,
+                    'suffix'       => isset($input['suffix']) ? $input['suffix'] : null,
+                    'is_currency'  => isset($input['is_currency']) ? $input['is_currency'] : 0,
+                    'blank_option' => isset($input['blank_option']) ? $input['blank_option'] : 0,
                 ]);
             } else {
                 $created = Input::create([
@@ -833,11 +860,15 @@ class InputSeederController extends Controller
                     'user_id'        => 1,
                     'name'           => $input['name'],
                     'type'           => $input['type'],
-                    'prefix'         => $input['prefix'] ?? null,
-                    'suffix'         => $input['suffix'] ?? null,
-                    'is_currency'    => $input['is_currency'] ?? 0,
+                    'note'           => isset($input['note']) ? $input['note'] : null,
+                    'prefix'         => isset($input['prefix']) ? $input['prefix'] : null,
+                    'suffix'         => isset($input['suffix']) ? $input['suffix'] : null,
+                    'is_currency'    => isset($input['is_currency']) ? $input['is_currency'] : 0,
+                    'blank_option'   => isset($input['blank_option']) ? $input['blank_option'] : 0,
                 ]);
             }
+
+            $active_ids[] = $created->id;
 
             if (isset($input['children']) && count($input['children']) > 0) {
                 foreach ($input['children'] as $child) {
@@ -862,11 +893,37 @@ class InputSeederController extends Controller
             }
         }
 
+        Input::where('category_id', $cat_id)
+            ->whereNotIn('id', $active_ids)->update([
+                'status' => 0
+            ]);
+
         return $this->response;
     }
 
     private function input_details($name)
     {
+        $data['ali_treatments'] = [
+            ['name' => 'Aspirin', 'value' => 'aspirin',],
+            ['name' => 'Clopidogrel', 'value' => 'clopidogrel',],
+            ['name' => 'Statin', 'value' => 'statin',],
+            ['name' => 'Ace inhibitor', 'value' => 'ace_inhibitor',],
+            ['name' => 'ARB', 'value' => 'arb',],
+            ['name' => 'UFH', 'value' => 'ufh',],
+            ['name' => 'LMWH', 'value' => 'lmwh',],
+            ['name' => 'Fondaparinux', 'value' => 'fondaparinux',],
+            ['name' => 'Cilostazole', 'value' => 'cilostazole',],
+            ['name' => 'Pentoxifilin', 'value' => 'pentoxifilin',],
+            ['name' => 'Allopurinol', 'value' => 'allopurinol',],
+            ['name' => 'Other', 'value' => 'other',],
+        ];
+
+        $data['ali_fibrinolytic'] = [
+            ['name' => 'Alteplase', 'value' => 'alteplase',],
+            ['name' => 'Streptokinase', 'value' => 'streptokinase',],
+            ['name' => 'Urokinase', 'value' => 'urokinase',],
+        ];
+
         $data['gender'] = [
             ['name' => 'Male', 'value' => 'M',],
             ['name' => 'Female', 'value' => 'F',]
@@ -875,6 +932,19 @@ class InputSeederController extends Controller
         $data['bool'] = [
             ['name' => 'Yes', 'value' => 'yes',],
             ['name' => 'No', 'value' => 'no',]
+        ];
+
+        $data['sensory_loss'] = [
+            ['name' => 'None', 'value' => 'none',],
+            ['name' => 'Toes', 'value' => 'toes',],
+            ['name' => 'Above Toes', 'value' => 'above_toes',],
+        ];
+
+        $data['rutherford'] = [
+            ['name' => 'I', 'value' => 'I',],
+            ['name' => 'IIA', 'value' => 'IIA',],
+            ['name' => 'IIB', 'value' => 'IIB',],
+            ['name' => 'III', 'value' => 'III',],
         ];
 
         $data['fibrinogen'] = [
@@ -962,9 +1032,15 @@ class InputSeederController extends Controller
             ['name' => 'Sedentary', 'value' => 'sedentary',],
         ];
 
+        //CDT, Thrombus Aspiration, Balloon Angioplasty, Angiojet, Penumbra, EKOS, Surgical Embolectomy
         $data['intervention'] = [
             ['name' => 'CDT', 'value' => 'cdt',],
+            ['name' => 'Thrombus Aspiration', 'value' => 'thrombus_aspiration',],
+            ['name' => 'Balloon Angioplasty', 'value' => 'balloon_angioplasty',],
             ['name' => 'Angiojet', 'value' => 'angiojet',],
+            ['name' => 'Penumbra', 'value' => 'penumbra',],
+            ['name' => 'EKOS', 'value' => 'ekos',],
+            ['name' => 'Surgical Embolectomy', 'value' => 'surgical_embolectomy',],
         ];
 
         $data['type_varices'] = [
@@ -1016,10 +1092,10 @@ class InputSeederController extends Controller
             ['name' => 'Varicorrhage', 'value' => 'varicorrhage'],
             ['name' => 'Lymphedema', 'value' => 'lymphedema'],
             ['name' => 'Lipodermatosclerosis', 'value' => 'lipodermatosclerosis'],
-            ['name' => 'Ocher Dermatitis', 'value' => 'ocher_dermatitis'],
+            ['name' => 'Other Dermatitis', 'value' => 'other_dermatitis'],
         ];
 
-        $selected = $data[$name] ?? null;
+        $selected = isset($data[$name]) ? $data[$name] : null;
 
         if ($selected) {
             return $selected;
@@ -1028,7 +1104,8 @@ class InputSeederController extends Controller
         }
     }
 
-    public function password(){
+    public function password()
+    {
         return Hash::make('password');
     }
 }

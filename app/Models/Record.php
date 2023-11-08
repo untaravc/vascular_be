@@ -16,6 +16,10 @@ class Record extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function institution(){
+        return $this->belongsTo(Institution::class);
+    }
+
     public function scopeMyOwn($query){
         $auth = Auth::guard()->user();
         return $query->whereUserId($auth['id']);

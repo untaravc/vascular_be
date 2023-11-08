@@ -26,6 +26,13 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
+        $user = $request->user();
+        if($user->role_id != 1){
+            $this->response['status'] = false;
+            $this->response['text'] = "Unauthorized";
+            return $this->response;
+        }
+
         $this->validateData($request);
 
         Category::create($request->all());
@@ -43,6 +50,13 @@ class CategoryController extends Controller
 
     public function update(Request $request)
     {
+        $user = $request->user();
+        if($user->role_id != 1){
+            $this->response['status'] = false;
+            $this->response['text'] = "Unauthorized";
+            return $this->response;
+        }
+
         $this->validateData($request);
 
         $project = Category::find($request->id);
@@ -66,7 +80,14 @@ class CategoryController extends Controller
         return $this->response;
     }
 
-    public function destroy($id){
+    public function destroy($id, Request $request){
+        $user = $request->user();
+        if($user->role_id != 1){
+            $this->response['status'] = false;
+            $this->response['text'] = "Unauthorized";
+            return $this->response;
+        }
+
         $input = Input::whereCategoryId($id)
             ->first();
 

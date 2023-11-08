@@ -135,6 +135,8 @@ class InputController extends Controller
                 'dependency_id'    => $request->dependency_id,
                 'dependency_value' => $request->dependency_value,
                 'status'           => $request->status,
+                'blank_option'     => $request->blank_option,
+                'note'          => $request->note,
             ]);
             $this->response['text'] = 'Updated!';
         } else {

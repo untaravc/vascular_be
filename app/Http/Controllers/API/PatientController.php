@@ -72,15 +72,21 @@ class PatientController extends Controller
                 "user_id" => $request->user_id,
                 "name"    => $request->name,
                 "dob"     => $request->dob,
+                "nik"     => $request->nik,
                 "address" => $request->address,
             ]);
         }
 
-        $auth = $request->user();
-
         $record = Record::wherePatientId($patient->id)
             ->whereProjectId($project->id)
             ->first();
+
+        $user = $request->user();
+        if($user->institution_id == null){
+            $this->response['status'] = false;
+            $this->response['text'] = 'Institution not set';
+            return $this->response;
+        }
 
         if (!$record) {
             $record = Record::create([
@@ -89,13 +95,13 @@ class PatientController extends Controller
                 "name"           => $patient->name,
                 "dob"            => $patient->dob,
                 "project_id"     => $project->id,
-                "institution_id" => $auth->institution_id ?? $project->institution_id,
+                "institution_id" => $user->institution_id,
                 "category_id"    => $request->category_id,
-//                "record_number"  => null,
+                "nik"            => $request->nik,
             ]);
-        }else{
+        } else {
             $record->update([
-                "category_id"    => $request->category_id,
+                "category_id" => $request->category_id,
             ]);
         }
 
@@ -112,6 +118,7 @@ class PatientController extends Controller
             $request->validate([
                 'name' => 'required',
                 'dob'  => 'required',
+                'nik'         => 'required|numeric|digits:16',
             ]);
         } else {
             $request->validate([
@@ -121,9 +128,9 @@ class PatientController extends Controller
                 'user_id'     => 'required',
                 'address'     => 'nullable',
                 'category_id' => 'required',
+                'nik'         => 'required|numeric|digits:16',
             ]);
         }
-
     }
 
     public function update(Request $request, $id)

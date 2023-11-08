@@ -41,6 +41,17 @@ class User extends Authenticatable
         return $this->belongsTo(Institution::class);
     }
 
+    public function institutions(){
+        return $this->belongsToMany(
+            Institution::class,
+            'user_institutions',
+        );
+    }
+
+    public function user_institutions(){
+        return $this->hasMany(UserInstitution::class);
+    }
+
     public function getRoleLabelAttribute(){
         if(isset($this->attributes['role_id'])){
             switch ($this->attributes['role_id']){

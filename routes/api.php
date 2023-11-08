@@ -18,6 +18,7 @@ use App\Http\Controllers\API\MenuRoleController;
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\ExportController;
 use App\Http\Controllers\API\InputDetailController;
+use App\Http\Controllers\API\UploadFileController;
 
 Route::middleware('auth:sanctum')
 ->get('/user', function (Request $request) {
@@ -72,6 +73,7 @@ Route::group(['middleware'=>'auth:sanctum'], function(){
     Route::delete('records/{record_id}', [RecordController::class, 'destroy']);
     Route::get('export-list', [ExportController::class, 'list']);
     Route::post('export-data', [ExportController::class, 'export']);
+    Route::post('file-upload', [UploadFileController::class, 'store']);
 
     // Dashboard
     Route::get('dashboard-stats', [DashboardController::class, 'stats']);
