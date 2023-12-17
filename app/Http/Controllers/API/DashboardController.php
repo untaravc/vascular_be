@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller
 {
@@ -111,7 +112,7 @@ class DashboardController extends Controller
 
             if ($request->password) {
                 $user->update([
-                    'password' => $request->password,
+                    'password' => Hash::make($request->password),
                 ]);
             }
         }

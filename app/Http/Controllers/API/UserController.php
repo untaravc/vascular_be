@@ -51,7 +51,7 @@ class UserController extends Controller
 
         $user = User::create($request->all());
 
-        $user->institution()->sync($request->institution_ids);
+        $user->institutions()->sync($request->institution_ids);
 
         return $this->response;
     }

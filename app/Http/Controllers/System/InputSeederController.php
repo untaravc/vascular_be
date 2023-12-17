@@ -1106,7 +1106,7 @@ class InputSeederController extends Controller
 
     public function password()
     {
-        return Hash::make('password');
+        return Hash::make('vascular');
     }
 }
 
